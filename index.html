@@ -1,0 +1,69 @@
+<html lang="en">
+<head>
+	<script type="text/javascript" src="/dolibarr/standard/htdocs/includes/jquery/js/jquery.min.js"></script>
+	
+	<script>
+		// Source : http://stackoverflow.com/questions/1291812/iframe-javascript-access-parent-dom-across-domains
+		/*
+		function SendMessage()
+	    {
+	        var win = document.getElementById("local_iframe").contentWindow;
+	
+	        // http://robertnyman.com/2010/03/18/postmessage-in-html5-to-send-messages-between-windows-and-iframes/
+	
+	
+	        // http://stackoverflow.com/questions/16072902/dom-exception-12-for-window-postmessage
+	        // Specify origin. Should be a domain or a wildcard "*"
+	
+	        if (win == null || !window['postMessage'])
+	            alert("oh crap");
+	        else
+	            win.postMessage("hello", "*");
+	        //alert("lol");
+	    }
+		
+		*/
+		function ReceiveMessage(evt) 
+		{
+	        var message;
+	        //if (evt.origin !== "http://robertnyman.com")
+	        if (evt.origin != 'http://192.168.1.75') {
+	        	console.log('Crossdomain denied');
+	        }
+	        else {
+	            console.log('Requete de : ', evt.origin);
+	            console.log('Date returned : ', evt.data);
+	            console.log(evt);
+	        }
+	       
+	        //evt.source.postMessage("thanks, got it ;)", event.origin);
+	    } // End Function ReceiveMessage
+		
+		if (!window['postMessage'])
+	        alert("oh crap");
+	    else {
+	        if (window.addEventListener) {
+	            //alert("standards-compliant");
+	            // For standards-compliant web browsers (ie9+)
+	            window.addEventListener("message", ReceiveMessage, false);
+	        }
+	        else {
+	            //alert("not standards-compliant (ie8)");
+	            window.attachEvent("onmessage", ReceiveMessage);
+	        }
+	    }
+	</script>
+</head>
+<body>
+	
+	<form id="local" method="post" action="#" target="local_iframe">
+		<input type="text" name="local_input" value="" />
+		
+		<input type="submit" value="send" />
+	</form>
+	
+	<iframe id="local_iframe" name="local_iframe" src="http://192.168.1.75/crossdomain/interface.php"></iframe>
+	
+	
+</body>
+</html>
